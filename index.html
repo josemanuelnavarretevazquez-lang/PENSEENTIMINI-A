@@ -1,0 +1,1663 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#02000a">
+<title>♡</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Great+Vibes&family=Dancing+Script:wght@500;700;900&display=swap" rel="stylesheet">
+
+<style>
+/* ============================================================
+   RESET Y BASE
+   ============================================================ */
+*,*::before,*::after{ box-sizing:border-box; margin:0; padding:0; }
+
+html,body{
+  height:100%;
+  overflow:hidden;
+  background:#02000a;
+  font-family:'Cormorant Garamond', Georgia, serif;
+  -webkit-font-smoothing:antialiased;
+  color:#fff;
+  user-select:none;
+  -webkit-user-select:none;
+  touch-action:none;
+}
+
+/* ============================================================
+   FONDO GALÁCTICO MULTICAPA
+   ============================================================ */
+body::before{
+  content:'';
+  position:fixed;
+  inset:0;
+  z-index:0;
+  pointer-events:none;
+  background:
+    radial-gradient(ellipse 80% 55% at 18% 22%, rgba(120, 40, 200, 0.24), transparent 60%),
+    radial-gradient(ellipse 65% 50% at 82% 30%, rgba(40, 100, 220, 0.22), transparent 60%),
+    radial-gradient(ellipse 70% 55% at 75% 80%, rgba(255, 60, 140, 0.16), transparent 65%),
+    radial-gradient(ellipse 60% 45% at 15% 75%, rgba(60, 200, 200, 0.16), transparent 60%),
+    radial-gradient(ellipse 100% 70% at 50% 50%, rgba(90, 30, 150, 0.20), transparent 75%),
+    radial-gradient(ellipse 40% 30% at 55% 45%, rgba(255, 200, 100, 0.10), transparent 60%),
+    linear-gradient(160deg, #02000a 0%, #08031a 45%, #03000d 100%);
+  animation: nebulaShift 30s ease-in-out infinite alternate;
+}
+
+@keyframes nebulaShift{
+  0%   { filter: hue-rotate(0deg)   brightness(1);    }
+  50%  { filter: hue-rotate(-15deg) brightness(1.18); }
+  100% { filter: hue-rotate(20deg)  brightness(1.05); }
+}
+
+/* ============================================================
+   PARTÍCULAS DE POLVO GALÁCTICO FLOTANTE
+   ============================================================ */
+#particles{
+  position:fixed;
+  inset:0;
+  z-index:0;
+  pointer-events:none;
+  overflow:hidden;
+}
+#particles .pt{
+  position:absolute;
+  border-radius:50%;
+  animation: floatUp linear infinite;
+  opacity:0;
+}
+@keyframes floatUp{
+  0%   { transform:translateY(0) scale(0.5); opacity:0; }
+  15%  { opacity:0.85; }
+  85%  { opacity:0.6; }
+  100% { transform:translateY(-110vh) scale(1.3); opacity:0; }
+}
+
+/* ============================================================
+   CANVAS PRINCIPAL
+   ============================================================ */
+#stage{
+  position:fixed;
+  inset:0;
+  z-index:1;
+  display:block;
+  width:100%;
+  height:100%;
+  cursor:default;
+  touch-action:none;
+  -webkit-tap-highlight-color:transparent;
+  opacity:0;
+  transition:opacity 1.4s ease;
+}
+#stage.on{ opacity:1; }
+#stage.grab{ cursor:grab; }
+#stage.grab:active{ cursor:grabbing; }
+
+/* ============================================================
+   PANTALLA DE BIENVENIDA
+   ============================================================ */
+#welcome{
+  position:fixed;
+  inset:0;
+  z-index:5;
+  display:flex;
+  flex-direction:column;
+  justify-content:flex-end;
+  align-items:center;
+  padding:0 6vw 4vh;
+  text-align:center;
+  background:radial-gradient(ellipse at center, rgba(20, 5, 45, 0.7) 0%, rgba(2, 0, 10, 0.97) 70%);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  transition:opacity 1.2s ease, visibility 1.2s;
+}
+#welcome.hidden{ opacity:0; visibility:hidden; pointer-events:none; }
+
+/* ============================================================
+   ZONA DEL CARRITO (ABAJO)
+   ============================================================ */
+#carZone{
+  position:absolute;
+  bottom:4vh;
+  left:50%;
+  transform:translateX(-50%);
+  width:100%;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  pointer-events:none;
+  z-index:10;
+}
+
+#car{
+  position:relative;
+  width:220px;
+  height:120px;
+  animation: carDrive 3.6s ease-in-out infinite;
+  cursor:pointer;
+  transition:transform 0.4s ease;
+  filter:drop-shadow(0 10px 35px rgba(180, 80, 255, 0.55));
+  pointer-events:auto;
+}
+#car:hover{
+  filter:drop-shadow(0 10px 45px rgba(120, 180, 255, 0.85));
+}
+
+@keyframes carDrive{
+  0%,100% { transform:translateY(0) rotate(-1.5deg); }
+  50%     { transform:translateY(-6px) rotate(1.5deg); }
+}
+
+#car.runaway{
+  animation: carRunAway 1.8s ease-in forwards;
+  pointer-events:none;
+}
+
+@keyframes carRunAway{
+  0%   { transform:translateX(0) rotate(0deg); }
+  20%  { transform:translateX(-30px) rotate(-8deg); }
+  40%  { transform:translateX(60px) rotate(8deg); }
+  100% { transform:translateX(180vw) rotate(-4deg); }
+}
+
+#car svg{ width:100%; height:100%; overflow:visible; }
+
+#car .wheel{
+  transform-origin:center;
+  animation: wheelSpin 1s linear infinite;
+}
+#car.runaway .wheel{ animation-duration:0.28s; }
+
+@keyframes wheelSpin{
+  from { transform:rotate(0deg); }
+  to   { transform:rotate(360deg); }
+}
+
+#car .smoke{
+  opacity:0.6;
+  animation: smokePuff 2.2s ease-out infinite;
+}
+#car .smoke:nth-child(2){ animation-delay:0.55s; }
+#car .smoke:nth-child(3){ animation-delay:1.1s; }
+
+@keyframes smokePuff{
+  0%   { transform:translate(0,0) scale(0.4); opacity:0.7; }
+  100% { transform:translate(-30px,-18px) scale(1.5); opacity:0; }
+}
+
+/* ============================================================
+   BOCADILLO DEL CARRITO
+   ============================================================ */
+#carBubble{
+  position:absolute;
+  bottom:calc(100% + 20px);
+  left:50%;
+  transform:translateX(-50%) scale(0);
+  background:linear-gradient(135deg, rgba(245, 245, 255, 0.98), rgba(230, 230, 255, 0.98));
+  color:#3a1050;
+  padding:16px 26px;
+  border-radius:24px 24px 24px 6px;
+  font-family:'Dancing Script', cursive;
+  font-size:1.45rem;
+  font-weight:700;
+  white-space:nowrap;
+  box-shadow:0 8px 35px rgba(140, 80, 255, 0.55);
+  transform-origin:bottom left;
+  transition:transform 0.4s cubic-bezier(.34,1.56,.64,1), opacity 0.3s;
+  opacity:0;
+  pointer-events:none;
+  max-width:85vw;
+  z-index:12;
+  min-width:180px;
+}
+#carBubble.show{
+  transform:translateX(-50%) scale(1);
+  opacity:1;
+}
+#carBubble::after{
+  content:'';
+  position:absolute;
+  bottom:-10px;
+  left:24px;
+  width:0;
+  height:0;
+  border:10px solid transparent;
+  border-top-color:rgba(230, 230, 255, 0.98);
+  border-bottom:0;
+  border-left:0;
+}
+
+/* ============================================================
+   MENSAJE RACING
+   ============================================================ */
+#carRace{
+  position:absolute;
+  bottom:calc(100% + 20px);
+  left:50%;
+  transform:translateX(-50%) scale(0);
+  background:linear-gradient(135deg, #7b5bff, #c05bff, #ff5baf, #5bc8ff);
+  background-size:300% 300%;
+  color:#fff;
+  padding:20px 34px;
+  border-radius:24px;
+  font-family:'Dancing Script', cursive;
+  font-size:1.8rem;
+  font-weight:900;
+  white-space:nowrap;
+  text-shadow:0 2px 12px rgba(0,0,0,0.5);
+  box-shadow:
+    0 10px 40px rgba(140, 80, 255, 0.8),
+    0 0 60px rgba(80, 160, 255, 0.6);
+  transition:transform 0.4s cubic-bezier(.34,1.56,.64,1), opacity 0.3s;
+  opacity:0;
+  pointer-events:none;
+  max-width:90vw;
+  z-index:13;
+  animation: raceGradient 1.5s ease infinite, racePulse 0.8s ease-in-out infinite;
+  text-align:center;
+}
+
+@keyframes raceGradient{
+  0%,100% { background-position:0% 50%; }
+  50%     { background-position:100% 50%; }
+}
+
+@keyframes racePulse{
+  0%,100% { box-shadow: 0 10px 40px rgba(140, 80, 255, 0.8), 0 0 60px rgba(80, 160, 255, 0.6); }
+  50%     { box-shadow: 0 10px 60px rgba(200, 100, 255, 1), 0 0 90px rgba(120, 200, 255, 0.9); }
+}
+
+#carRace.show{
+  transform:translateX(-50%) scale(1);
+  opacity:1;
+}
+
+#carRace .race-sub{
+  display:block;
+  margin-top:10px;
+  font-size:1.4rem;
+  font-weight:700;
+  opacity:0.95;
+  letter-spacing:0.02em;
+}
+
+@media (max-width: 600px){
+  #carRace{
+    font-size:1.4rem;
+    padding:16px 22px;
+    white-space:normal;
+    max-width:90vw;
+    line-height:1.3;
+  }
+  #carRace .race-sub{
+    font-size:1.15rem;
+    margin-top:8px;
+  }
+}
+
+/* ============================================================
+   BOTONES SÍ / NO
+   ============================================================ */
+#carChoices{
+  position:absolute;
+  bottom:calc(100% + 100px);
+  left:50%;
+  transform:translateX(-50%) scale(0);
+  display:flex;
+  gap:16px;
+  transition:transform 0.4s cubic-bezier(.34,1.56,.64,1);
+  opacity:0;
+  pointer-events:none;
+  z-index:11;
+}
+#carChoices.show{
+  transform:translateX(-50%) scale(1);
+  opacity:1;
+  pointer-events:auto;
+}
+
+#carChoices button{
+  padding:14px 32px;
+  font-family:'Dancing Script', cursive;
+  font-size:1.4rem;
+  font-weight:700;
+  border-radius:44px;
+  border:2px solid rgba(160, 140, 255, 0.9);
+  cursor:pointer;
+  transition:all 0.3s ease;
+  background:rgba(245, 245, 255, 0.97);
+  color:#3a1050;
+  box-shadow:0 6px 24px rgba(140, 80, 255, 0.5);
+}
+#carChoices button:hover{
+  transform:translateY(-4px) scale(1.1);
+  box-shadow:0 10px 36px rgba(140, 80, 255, 0.85);
+}
+
+#carChoices #btnYes{
+  background:linear-gradient(135deg, #c0b0ff, #ff9dd6, #9dd8ff);
+  background-size:200% 200%;
+  color:#1a0a2e;
+  animation: gradientShift 3s ease infinite;
+}
+
+@keyframes gradientShift{
+  0%,100% { background-position:0% 50%; }
+  50%     { background-position:100% 50%; }
+}
+
+#carChoices #btnNo{
+  background:rgba(220, 220, 240, 0.95);
+  color:#4a3060;
+}
+
+/* ============================================================
+   BOTÓN DE INICIO
+   ============================================================ */
+#startBtn{
+  position:absolute;
+  bottom:calc(50% - 40px);
+  left:50%;
+  transform:translate(-50%, 0) scale(0.5);
+  padding:1.4rem 3.6rem;
+  font-family:'Dancing Script', cursive;
+  font-size:clamp(1.6rem, 4vw, 2.2rem);
+  font-weight:900;
+  letter-spacing:0.06em;
+  color:#fff;
+  background:linear-gradient(135deg, #5b8fff, #a05bff, #ff5bd6, #5bc8ff, #5b8fff);
+  background-size:300% 300%;
+  border:none;
+  border-radius:70px;
+  cursor:pointer;
+  box-shadow:
+    0 0 40px rgba(120, 80, 255, 0.7),
+    0 10px 40px rgba(80, 140, 255, 0.5),
+    inset 0 0 30px rgba(255, 255, 255, 0.25);
+  transition:all 0.5s ease;
+  opacity:0;
+  pointer-events:none;
+  animation: rainbowFlow 5s ease infinite;
+  z-index:15;
+}
+
+@keyframes rainbowFlow{
+  0%,100% { background-position:0% 50%; }
+  50%     { background-position:100% 50%; }
+}
+
+#startBtn.show{
+  opacity:1;
+  transform:translate(-50%, 0) scale(1);
+  pointer-events:auto;
+}
+
+#startBtn:hover{
+  transform:translate(-50%, -4px) scale(1.08);
+  box-shadow:
+    0 0 60px rgba(160, 80, 255, 1),
+    0 15px 50px rgba(80, 140, 255, 0.8),
+    inset 0 0 40px rgba(255, 255, 255, 0.4);
+}
+
+#startBtn:active{ transform:translate(-50%, 0) scale(0.98); }
+
+/* ============================================================
+   CONTROLES FLOTANTES
+   ============================================================ */
+#controls{
+  position:fixed;
+  top:20px;
+  right:20px;
+  z-index:6;
+  display:flex;
+  gap:12px;
+  opacity:0;
+  pointer-events:none;
+  transition:opacity 0.6s ease;
+}
+#controls.visible{ opacity:1; pointer-events:auto; }
+
+#controls button{
+  width:52px;
+  height:52px;
+  border-radius:50%;
+  background:rgba(20, 10, 50, 0.7);
+  border:1.5px solid rgba(160, 140, 255, 0.7);
+  color:#c8d0ff;
+  cursor:pointer;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  font-size:1.4rem;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow:0 0 20px rgba(120, 80, 255, 0.45);
+  transition:all 0.3s ease;
+}
+#controls button:hover{
+  transform:scale(1.12);
+  box-shadow:0 0 38px rgba(120, 140, 255, 0.9);
+  background:rgba(100, 60, 200, 0.35);
+}
+
+#musicBtn.playing{ animation: musicPulse 1.6s ease-in-out infinite; }
+@keyframes musicPulse{
+  0%,100% { box-shadow:0 0 20px rgba(120, 80, 255, 0.45); }
+  50%     { box-shadow:0 0 45px rgba(100, 160, 255, 1); }
+}
+
+/* ============================================================
+   HINT INFERIOR
+   ============================================================ */
+#hint{
+  position:fixed;
+  left:50%;
+  bottom:clamp(22px, 5vh, 48px);
+  transform:translateX(-50%);
+  z-index:3;
+  font-family:'Dancing Script', cursive;
+  font-size:clamp(1rem, 2.6vw, 1.25rem);
+  color:rgba(200, 210, 255, 0.75);
+  letter-spacing:0.04em;
+  pointer-events:none;
+  opacity:0;
+  transition:opacity 1.2s ease;
+  text-align:center;
+  white-space:nowrap;
+  text-shadow:0 0 25px rgba(120, 140, 255, 0.6);
+}
+#hint.on{ opacity:1; }
+#hint.fade{ opacity:0; }
+
+/* ============================================================
+   INDICADOR DE PROGRESO
+   ============================================================ */
+#progress{
+  position:fixed;
+  left:50%;
+  bottom:clamp(60px, 9vh, 90px);
+  transform:translateX(-50%);
+  z-index:3;
+  display:flex;
+  gap:10px;
+  opacity:0;
+  transition:opacity 0.8s ease;
+}
+#progress.on{ opacity:1; }
+
+#progress .dot{
+  width:10px;
+  height:10px;
+  border-radius:50%;
+  background:rgba(140, 120, 220, 0.3);
+  transition:all 0.4s ease;
+}
+#progress .dot.active{
+  background:linear-gradient(135deg, #7b5bff, #c05bff, #5bc8ff);
+  box-shadow:0 0 16px #a0c8ff;
+  transform:scale(1.6);
+}
+#progress .dot.done{
+  background:rgba(160, 140, 255, 0.7);
+}
+
+/* ============================================================
+   FLECHAS LATERALES
+   ============================================================ */
+#arrowL, #arrowR{
+  position:fixed;
+  top:50%;
+  transform:translateY(-50%);
+  z-index:3;
+  width:58px;
+  height:58px;
+  border-radius:50%;
+  background:rgba(20, 10, 50, 0.5);
+  border:1.5px solid rgba(160, 140, 255, 0.5);
+  color:rgba(200, 210, 255, 0.85);
+  cursor:pointer;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  font-size:1.6rem;
+  backdrop-filter: blur(8px);
+  opacity:0;
+  pointer-events:none;
+  transition:all 0.35s ease;
+}
+#arrowL{ left:3vw; }
+#arrowR{ right:3vw; }
+
+#arrowL.visible, #arrowR.visible{ opacity:1; pointer-events:auto; }
+
+#arrowL:hover, #arrowR:hover{
+  background:rgba(120, 100, 255, 0.4);
+  box-shadow:0 0 32px rgba(120, 140, 255, 0.7);
+  color:#fff;
+  transform:translateY(-50%) scale(1.1);
+}
+
+/* ============================================================
+   ESTROFA DEL POEMA
+   ============================================================ */
+.stanza{
+  position:fixed;
+  left:50%;
+  top:50%;
+  transform:translate(-50%, -50%);
+  z-index:2;
+  display:flex;
+  flex-direction:column;
+  gap:clamp(12px, 2.4vh, 24px);
+  align-items:center;
+  text-align:center;
+  width:100%;
+  max-width:96vw;
+  padding:0 4vw;
+  pointer-events:none;
+  will-change:transform, opacity;
+}
+
+.stanza .vline{
+  font-size:clamp(1.15rem, 3.1vw, 2.1rem);
+  font-weight:500;
+  line-height:1.45;
+  letter-spacing:1.8px;
+  background:linear-gradient(135deg, #b0c8ff, #d0b0ff, #ffb0e0, #b0e0ff);
+  background-size:200% 200%;
+  -webkit-background-clip:text;
+  background-clip:text;
+  -webkit-text-fill-color:transparent;
+  filter:drop-shadow(0 0 14px rgba(140, 160, 255, 0.75));
+}
+
+.stanza .vline .ch{
+  display:inline-block;
+  opacity:0;
+  color:#0a0a20;
+  -webkit-text-fill-color:#0a0a20;
+  transition:opacity 0.3s ease, color 0.3s ease;
+}
+
+.stanza .vline .ch.on{
+  opacity:1;
+  background:linear-gradient(135deg, #b0c8ff, #d0b0ff, #ffb0e0, #b0e0ff);
+  background-size:200% 200%;
+  -webkit-background-clip:text;
+  background-clip:text;
+  -webkit-text-fill-color:transparent;
+}
+</style>
+</head>
+
+<body>
+
+<!-- CAPA DE PARTÍCULAS DE FONDO -->
+<div id="particles"></div>
+
+<!-- CANVAS DEL CORAZÓN -->
+<canvas id="stage"></canvas>
+
+<!-- ============================================================
+     PANTALLA DE BIENVENIDA
+     ============================================================ -->
+<div id="welcome">
+  <button id="startBtn">Iniciar ♡</button>
+
+  <div id="carZone">
+    <div id="car">
+      <!-- BOCADILLO -->
+      <div id="carBubble">¡Hola, Cami! 👋</div>
+
+      <!-- MENSAJE RACING -->
+      <div id="carRace">
+        ¡En sus marcas... listos... FUERAAAA! 🏁<br>
+        <span class="race-sub">¡Vamos Cami, algo increíble nos espera! ✨</span>
+      </div>
+
+      <!-- BOTONES SÍ / NO -->
+      <div id="carChoices">
+        <button id="btnYes">¡Sí! ♡</button>
+        <button id="btnNo">No…</button>
+      </div>
+
+      <!-- DIBUJO SVG DEL CARRITO -->
+      <svg viewBox="0 0 240 130" xmlns="http://www.w3.org/2000/svg">
+        <!-- Humo del escape -->
+        <circle class="smoke" cx="38" cy="92" r="8" fill="#8a7aff"/>
+        <circle class="smoke" cx="28" cy="92" r="6" fill="#c09dff"/>
+        <circle class="smoke" cx="18" cy="92" r="5" fill="#ff9dd6"/>
+
+        <!-- Carrocería -->
+        <path d="M 45 78 L 58 48 L 152 48 L 178 78 L 205 78 L 205 100 L 38 100 L 38 78 Z"
+              fill="url(#carGrad)" stroke="#b0b0ff" stroke-width="2"/>
+
+        <!-- Brillo superior -->
+        <path d="M 60 52 L 150 52 L 165 70 L 55 70 Z" fill="rgba(255,255,255,0.18)"/>
+
+        <!-- Ventanas -->
+        <path d="M 72 54 L 110 54 L 110 74 L 66 74 Z" fill="#050520" stroke="#b0b0ff" stroke-width="1"/>
+        <path d="M 118 54 L 148 54 L 162 74 L 118 74 Z" fill="#050520" stroke="#b0b0ff" stroke-width="1"/>
+
+        <!-- Corazón en ventana trasera -->
+        <text x="86" y="68" font-size="10" fill="#c09dff" text-anchor="middle">♥</text>
+
+        <!-- Faros -->
+        <circle cx="198" cy="88" r="5" fill="#e0f0ff"/>
+        <circle cx="198" cy="88" r="9" fill="#e0f0ff" opacity="0.3"/>
+        <circle cx="42" cy="88" r="4" fill="#ff5baf"/>
+
+        <!-- Ruedas -->
+        <g>
+          <circle cx="80" cy="102" r="14" fill="#0a0520" stroke="#b0b0ff" stroke-width="2"/>
+          <circle class="wheel" cx="80" cy="102" r="8" fill="#8a7aff"/>
+          <line class="wheel" x1="80" y1="94" x2="80" y2="110" stroke="#fff" stroke-width="2"/>
+        </g>
+        <g>
+          <circle cx="172" cy="102" r="14" fill="#0a0520" stroke="#b0b0ff" stroke-width="2"/>
+          <circle class="wheel" cx="172" cy="102" r="8" fill="#8a7aff"/>
+          <line class="wheel" x1="172" y1="94" x2="172" y2="110" stroke="#fff" stroke-width="2"/>
+        </g>
+
+        <!-- Definiciones de gradiente -->
+        <defs>
+          <linearGradient id="carGrad" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#7b5bff"/>
+            <stop offset="35%" stop-color="#a05bff"/>
+            <stop offset="70%" stop-color="#ff5baf"/>
+            <stop offset="100%" stop-color="#5bc8ff"/>
+          </linearGradient>
+        </defs>
+      </svg>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     CONTROLES
+     ============================================================ -->
+<div id="controls">
+  <button id="musicBtn" title="Música">♪</button>
+  <button id="restartBtn" title="Reiniciar">↻</button>
+</div>
+
+<!-- ============================================================
+     HINT + PROGRESO + FLECHAS
+     ============================================================ -->
+<div id="hint">desliza ← → o usa las flechas para navegar</div>
+<div id="progress"></div>
+<button id="arrowL" title="Anterior">‹</button>
+<button id="arrowR" title="Siguiente">›</button>
+
+<!-- ============================================================
+     AUDIO — PARACAMI.mp3
+     ============================================================ -->
+<audio id="bgMusic" loop preload="auto">
+  <source src="PARACAMI.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+(function(){
+'use strict';
+
+/* ============================================================
+   POEMA EN ESTROFAS
+   ============================================================ */
+const POEM_RAW = [
+  { title: 'De la grata fortuna de tu existencia', lines: [] },
+  { lines: [
+    'Hay presencias que, sin proclamar su llegada,',
+    'alteran la quietud de cuanto las circunda;',
+    'como el alba que, en silencio, disipa la noche',
+    'y devuelve a los campos su antigua hermosura.'
+  ]},
+  { lines: [
+    'Ignoro qué designio, qué ignota providencia',
+    'dispuso que tu senda coincidiera con la mía;',
+    'mas sé que, desde entonces, hay una luz distinta',
+    'en ciertos pensamientos que antes no florecían.'
+  ]},
+  { lines: [
+    'No es menester que el tiempo consagre los encuentros,',
+    'ni que los nombres definan aquello que acontece;',
+    'hay almas cuya esencia, aun sin ser comprendida,',
+    'deja una huella indeleble allí donde aparece.'
+  ]},
+  { lines: [
+    'Me importa la ventura que habita en tus mañanas,',
+    'la paz que te acompañe al declinar el día;',
+    'que no mancille el mundo la nobleza de tus sueños,',
+    'ni extinga sus pesares tu natural alegría.'
+  ]},
+  { lines: [
+    'Quisiera que la fortuna te fuese complaciente,',
+    'que el infortunio olvidase el umbral de tu morada;',
+    'que hallases en la vida motivos suficientes',
+    'para jamás sentir tu existencia desdichada.'
+  ]},
+  { lines: [
+    'Y si alguna vez la adversidad ensombrece tu horizonte,',
+    'si el desaliento ciñe de penumbra tu mirada,',
+    'ojalá encuentres, aun entre las ruinas del instante,',
+    'la certeza de que eres digna de las cosas más sagradas.'
+  ]},
+  { lines: [
+    'No pretendo imponerle a tu destino mis anhelos,',
+    'ni reclamar del tiempo promesas venideras;',
+    'pues hay sentimientos que conservan su nobleza',
+    'cuando se ofrecen libres, sin exigir siquiera.'
+  ]},
+  { lines: [
+    'Por eso, si estas líneas algún día te alcanzaren,',
+    'no busques entre ellas juramentos ni cadenas;',
+    'tan solo encontrarás la humilde certidumbre',
+    'de que tu existencia me resulta extraordinariamente bella.'
+  ]},
+  { lines: [
+    'Y acaso sea esta la más sincera de mis dichas:',
+    'no saber qué deparará el porvenir incierto,',
+    'pero agradecer, entre tantas casualidades del mundo,',
+    'la grata fortuna de haberte conocido.'
+  ]}
+];
+
+/* ============================================================
+   PALETA GALÁCTICA (colores del corazón)
+   ============================================================ */
+const PALETTE = [
+  '#7b5bff', '#a05bff', '#c05bff', '#ff5baf',
+  '#5b8fff', '#5bc8ff', '#8affd0', '#b0b0ff',
+  '#e0c8ff', '#ffd0e8', '#9dd8ff', '#ffb84d',
+  '#ff9dd6', '#c0b0ff', '#8ae0ff', '#d0a0ff',
+  '#ff7bc8', '#9bb8ff', '#a8ffec', '#ffd6a8'
+];
+
+/* ============================================================
+   REFERENCIAS AL DOM
+   ============================================================ */
+const canvas    = document.getElementById('stage');
+const ctx       = canvas.getContext('2d', { alpha: true });
+const hint      = document.getElementById('hint');
+const welcome   = document.getElementById('welcome');
+const startBtn  = document.getElementById('startBtn');
+const musicBtn  = document.getElementById('musicBtn');
+const restartBtn= document.getElementById('restartBtn');
+const controls  = document.getElementById('controls');
+const bgMusic   = document.getElementById('bgMusic');
+const progress  = document.getElementById('progress');
+const arrowL    = document.getElementById('arrowL');
+const arrowR    = document.getElementById('arrowR');
+const car       = document.getElementById('car');
+const carBubble = document.getElementById('carBubble');
+const carRace   = document.getElementById('carRace');
+const carChoices= document.getElementById('carChoices');
+const btnYes    = document.getElementById('btnYes');
+const btnNo     = document.getElementById('btnNo');
+const particlesEl = document.getElementById('particles');
+
+/* Dimensiones globales */
+let W = 0, H = 0, DPR = 1, CX = 0, CY = 0;
+
+/* ============================================================
+   ESTADO GLOBAL
+   ============================================================ */
+const state = {
+  phase: 'welcome',
+  rotX: 0.08, rotY: 0,
+  velX: 0, velY: 0,
+  autoRot: 0,
+  isDragging: false,
+  lastPX: 0, lastPY: 0,
+  zoom: 1, targetZoom: 1,
+  heartFillProgress: 0,
+  heartStartTime: 0,
+  heartbeat: 0
+};
+
+const stanzaState = {
+  current: 0,
+  stanzaEl: null,
+  typeTimers: [],
+  transitioning: false,
+  LINE_DELAY: 320
+};
+
+/* ============================================================
+   ESTRELLAS DE FONDO
+   ============================================================ */
+let stars = [];
+
+function buildStars(){
+  stars = [];
+  const n = Math.min(500, Math.floor((W * H) / 3400));
+  for (let i = 0; i < n; i++){
+    const r = Math.random();
+    stars.push({
+      x: Math.random() * W,
+      y: Math.random() * H,
+      r: r < 0.88 ? Math.random() * 0.9 + 0.2 : Math.random() * 1.7 + 0.6,
+      ph: Math.random() * Math.PI * 2,
+      sp: 0.4 + Math.random() * 2.2,
+      hue: r < 0.55 ? 'w' : (r < 0.72 ? 'v' : (r < 0.86 ? 'b' : (r < 0.94 ? 'p' : 'g')))
+    });
+  }
+}
+
+/* ============================================================
+   PARTÍCULAS DOM DE FONDO
+   ============================================================ */
+function buildParticles(){
+  const colors = ['#7b5bff', '#a05bff', '#5b8fff', '#5bc8ff', '#c05bff', '#ff5baf', '#8affd0'];
+  for (let i = 0; i < 40; i++){
+    const p = document.createElement('div');
+    p.className = 'pt';
+    const size = Math.random() * 5 + 1.5;
+    p.style.width = size + 'px';
+    p.style.height = size + 'px';
+    p.style.left = Math.random() * 100 + '%';
+    p.style.bottom = '-20px';
+    const c = colors[Math.floor(Math.random() * colors.length)];
+    p.style.background = c;
+    p.style.boxShadow = `0 0 ${size*3}px ${c}`;
+    p.style.animationDuration = (12 + Math.random() * 18) + 's';
+    p.style.animationDelay = (Math.random() * -25) + 's';
+    particlesEl.appendChild(p);
+  }
+}
+
+/* ============================================================
+   CORAZÓN DE PARTÍCULAS
+   ============================================================ */
+const HEART_PARTICLES = [];
+
+/* Fórmula matemática del corazón */
+function insideHeart(x, y){
+  const ax = x;
+  const ay = -y;
+  const eq = Math.pow(ax*ax + ay*ay - 1, 3) - ax*ax * Math.pow(ay, 3);
+  return eq <= 0;
+}
+
+function generateHeartParticles(){
+  HEART_PARTICLES.length = 0;
+
+  /* --- 1) Contorno bien definido (~700 partículas) --- */
+  const CONTOUR = 700;
+  for (let i = 0; i < CONTOUR; i++){
+    const t = (i / CONTOUR) * Math.PI * 2;
+    const hx = 16 * Math.pow(Math.sin(t), 3);
+    const hy = 13 * Math.cos(t) - 5 * Math.cos(2*t)
+             - 2 * Math.cos(3*t) - Math.cos(4*t);
+    const jitter = 0.12;
+    const rx = hx + (Math.random() - 0.5) * jitter;
+    const ry = -hy + (Math.random() - 0.5) * jitter;
+
+    HEART_PARTICLES.push({
+      x: rx * 9, y: ry * 9,
+      baseX: rx * 9, baseY: ry * 9,
+      size: 1.3 + Math.random() * 1.4,
+      color: PALETTE[Math.floor(Math.random() * PALETTE.length)],
+      phase: Math.random() * Math.PI * 2,
+      sp: 0.4 + Math.random() * 1.4,
+      orbital: Math.random() * 0.5,
+      appearDelay: Math.random() * 0.25,
+      type: 'contour'
+    });
+  }
+
+  /* --- 2) Relleno interior (~1300 partículas) --- */
+  const FILL = 1300;
+  let intentos = 0;
+  while (HEART_PARTICLES.length < CONTOUR + FILL && intentos < FILL * 25){
+    intentos++;
+    const ang = Math.random() * Math.PI * 2;
+    const r = Math.pow(Math.random(), 0.75);
+    const x = Math.cos(ang) * r * 18;
+    const y = Math.sin(ang) * r * 18;
+    const nx = x / 9, ny = y / 9;
+    if (insideHeart(nx, ny)){
+      HEART_PARTICLES.push({
+        x: x * 9, y: y * 9,
+        baseX: x * 9, baseY: y * 9,
+        size: 0.5 + Math.random() * 2.0,
+        color: PALETTE[Math.floor(Math.random() * PALETTE.length)],
+        phase: Math.random() * Math.PI * 2,
+        sp: 0.3 + Math.random() * 1.8,
+        orbital: 0.2 + Math.random() * 0.9,
+        appearDelay: 0.3 + Math.random() * 1.8,
+        type: 'fill'
+      });
+    }
+  }
+}
+
+/* ============================================================
+   RESIZE
+   ============================================================ */
+function resize(){
+  DPR = Math.min(window.devicePixelRatio || 1, 2);
+  W = window.innerWidth;
+  H = window.innerHeight;
+  canvas.width  = Math.floor(W * DPR);
+  canvas.height = Math.floor(H * DPR);
+  canvas.style.width  = W + 'px';
+  canvas.style.height = H + 'px';
+  CX = W / 2;
+  CY = H / 2;
+  const heartSize = Math.min(W, H) * 0.42;
+  const scaleFactor = heartSize / 16;
+  HEART_PARTICLES.forEach(p => {
+    p.hx = p.baseX * scaleFactor / 9;
+    p.hy = p.baseY * scaleFactor / 9;
+  });
+}
+
+/* ============================================================
+   ROTACIÓN 3D
+   ============================================================ */
+const CAM_DIST = 720;
+
+function rotate3D(x, y, z, rx, ry){
+  const cY = Math.cos(ry), sY = Math.sin(ry);
+  const x1 =  x * cY + z * sY;
+  const z1 = -x * sY + z * cY;
+  const cX = Math.cos(rx), sX = Math.sin(rx);
+  const y1 =  y * cX - z1 * sX;
+  const z2 =  y * sX + z1 * cX;
+  return { x: x1, y: y1, z: z2 };
+}
+
+function project(x, y, z){
+  const denom = CAM_DIST - z;
+  if (denom < 30) return null;
+  const p = CAM_DIST / denom;
+  return { sx: CX + x * p * state.zoom, sy: CY + y * p * state.zoom, p };
+}
+
+/* ============================================================
+   PROGRESO Y FLECHAS
+   ============================================================ */
+function buildProgress(){
+  progress.innerHTML = '';
+  POEM_RAW.forEach(() => {
+    const d = document.createElement('div');
+    d.className = 'dot';
+    progress.appendChild(d);
+  });
+}
+
+function updateProgress(){
+  const dots = progress.querySelectorAll('.dot');
+  dots.forEach((d, i) => {
+    d.classList.remove('active', 'done');
+    if (i < stanzaState.current) d.classList.add('done');
+    if (i === stanzaState.current) d.classList.add('active');
+  });
+}
+
+function updateArrows(){
+  arrowL.classList.toggle('visible', stanzaState.current > 0);
+  arrowR.classList.toggle('visible', stanzaState.current < POEM_RAW.length - 1);
+}
+
+/* ============================================================
+   ESTROFA — MOSTRAR / ESCRIBIR
+   ============================================================ */
+function clearStanza(){
+  stanzaState.typeTimers.forEach(t => clearTimeout(t));
+  stanzaState.typeTimers = [];
+  if (stanzaState.stanzaEl){
+    stanzaState.stanzaEl.remove();
+    stanzaState.stanzaEl = null;
+  }
+}
+
+function typeLine(lineEl, texto, delayStart, speed, timers){
+  const chars = [];
+  for (let i = 0; i < texto.length; i++){
+    const span = document.createElement('span');
+    span.className = 'ch';
+    span.textContent = texto[i] === ' ' ? '\u00A0' : texto[i];
+    lineEl.appendChild(span);
+    chars.push(span);
+  }
+  let i = 0;
+  function step(){
+    if (i >= chars.length) return;
+    chars[i].classList.add('on');
+    i++;
+    const t = setTimeout(step, speed);
+    timers.push(t);
+  }
+  const t0 = setTimeout(step, delayStart);
+  timers.push(t0);
+}
+
+function showStanza(index){
+  if (index < 0 || index >= POEM_RAW.length) return;
+  stanzaState.current = index;
+  updateProgress();
+  updateArrows();
+  clearStanza();
+
+  const stanza = POEM_RAW[index];
+  const el = document.createElement('div');
+  el.className = 'stanza';
+  document.body.appendChild(el);
+  stanzaState.stanzaEl = el;
+  const timers = stanzaState.typeTimers;
+
+  if (stanza.title){
+    const t = document.createElement('div');
+    t.className = 'vline';
+    t.style.fontFamily = "'Great Vibes', cursive";
+    t.style.fontSize = 'clamp(1.7rem, 4.2vw, 3rem)';
+    t.style.letterSpacing = '1px';
+    el.appendChild(t);
+    typeLine(t, stanza.title, 0, 35, timers);
+  }
+  stanza.lines.forEach((line, i) => {
+    const l = document.createElement('div');
+    l.className = 'vline';
+    el.appendChild(l);
+    const delay = (stanza.title ? 400 : 0) + i * stanzaState.LINE_DELAY;
+    typeLine(l, line, delay, 30, timers);
+  });
+}
+
+function slideOutStanza(direction, cb){
+  if (!stanzaState.stanzaEl){ if (cb) cb(); return; }
+  const el = stanzaState.stanzaEl;
+  el.style.transition = 'transform 0.5s ease, opacity 0.5s ease';
+  const dx = direction === 'left' ? -W * 0.9 : W * 0.9;
+  el.style.transform = `translate(calc(-50% + ${dx}px), -50%)`;
+  el.style.opacity = '0';
+  setTimeout(() => {
+    el.remove();
+    if (stanzaState.stanzaEl === el) stanzaState.stanzaEl = null;
+    if (cb) cb();
+  }, 510);
+}
+
+function nextStanza(){
+  if (stanzaState.transitioning) return;
+  if (stanzaState.current >= POEM_RAW.length - 1){
+    finishStanzas();
+    return;
+  }
+  stanzaState.transitioning = true;
+  slideOutStanza('left', () => {
+    showStanza(stanzaState.current + 1);
+    stanzaState.transitioning = false;
+  });
+}
+
+function prevStanza(){
+  if (stanzaState.transitioning) return;
+  if (stanzaState.current <= 0) return;
+  stanzaState.transitioning = true;
+  slideOutStanza('right', () => {
+    showStanza(stanzaState.current - 1);
+    stanzaState.transitioning = false;
+  });
+}
+
+/* ============================================================
+   FINAL → CORAZÓN
+   ============================================================ */
+async function finishStanzas(){
+  if (stanzaState.transitioning) return;
+  stanzaState.transitioning = true;
+  state.phase = 'heart';
+
+  arrowL.classList.remove('visible');
+  arrowR.classList.remove('visible');
+  progress.classList.remove('on');
+  hint.classList.remove('on');
+
+  if (stanzaState.stanzaEl){
+    stanzaState.stanzaEl.style.transition = 'opacity 0.8s';
+    stanzaState.stanzaEl.style.opacity = '0';
+    await sleep(600);
+    clearStanza();
+  }
+  await sleep(300);
+
+  generateHeartParticles();
+  resize();
+
+  state.phase = 'heart';
+  state.heartStartTime = performance.now();
+  state.heartFillProgress = 0;
+  canvas.classList.add('on');
+
+  setTimeout(() => {
+    hint.textContent = 'toca y arrastra para girar · rueda o pinza para zoom';
+    hint.classList.remove('fade');
+    hint.classList.add('on');
+  }, 1200);
+  setTimeout(() => hint.classList.add('fade'), 9000);
+}
+
+/* ============================================================
+   LOOP PRINCIPAL
+   ============================================================ */
+function loop(now){
+  requestAnimationFrame(loop);
+  const t = now / 1000;
+
+  if (state.phase === 'heart'){
+    const elapsed = (now - state.heartStartTime) / 1000;
+    state.heartFillProgress = Math.min(elapsed / 5.0, 1);
+    state.heartbeat = 1 + Math.sin(elapsed * 2.2) * 0.03;
+  }
+
+  if (state.phase === 'heart' && !state.isDragging){
+    state.velX *= 0.94;
+    state.velY *= 0.94;
+    state.rotX += state.velX;
+    state.rotY += state.velY;
+    state.rotX = clamp(state.rotX, -1.3, 1.3);
+    if (Math.abs(state.velY) < 0.0025) state.rotY += 0.0035;
+    state.autoRot += 0.008;
+  }
+
+  state.zoom += (state.targetZoom - state.zoom) * 0.14;
+
+  ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+  ctx.clearRect(0, 0, W, H);
+
+  ctx.globalCompositeOperation = 'lighter';
+  for (let i = 0; i < stars.length; i++){
+    const s = stars[i];
+    const tw = 0.28 + 0.72 * Math.abs(Math.sin(t * s.sp + s.ph));
+    ctx.globalAlpha = tw * 0.75;
+    ctx.fillStyle =
+      s.hue === 'w' ? '#ffffff' :
+      s.hue === 'v' ? '#a08aff' :
+      s.hue === 'b' ? '#8ac8ff' :
+      s.hue === 'p' ? '#ff8acc' : '#8affd0';
+    ctx.beginPath();
+    ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  if (state.phase === 'heart'){
+    const rx = state.rotX + Math.sin(state.autoRot) * 0.08 + 0.08;
+    const ry = state.rotY;
+    drawHeartParticles(rx, ry, now);
+  }
+
+  ctx.globalAlpha = 1;
+  ctx.globalCompositeOperation = 'source-over';
+}
+
+/* ============================================================
+   DIBUJAR CORAZÓN DE PARTÍCULAS
+   ============================================================ */
+function drawHeartParticles(rx, ry, now){
+  const baseSize = Math.max(1.5, Math.min(W, H) * 0.0032) * state.heartbeat;
+
+  const items = [];
+  for (let i = 0; i < HEART_PARTICLES.length; i++){
+    const p = HEART_PARTICLES[i];
+    const c = rotate3D(p.hx, p.hy, 0, rx, ry);
+    items.push({ p, c });
+  }
+  items.sort((a, b) => a.c.z - b.c.z);
+
+  /* Pase 1: partículas */
+  for (let i = 0; i < items.length; i++){
+    const { p, c } = items[i];
+
+    const appearT = clamp(
+      (state.heartFillProgress * (2.6 + p.appearDelay) - p.appearDelay) / 1.2,
+      0, 1
+    );
+    if (appearT <= 0) continue;
+
+    const orbitX = Math.sin(now * 0.001 * p.orbital + p.phase) * 2.8;
+    const orbitY = Math.cos(now * 0.0008 * p.orbital + p.phase) * 2.8;
+
+    const pc = project(c.x + orbitX, c.y + orbitY, c.z);
+    if (!pc) continue;
+
+    const depth = clamp((c.z + 180) / 360, 0, 1);
+    const bright = 0.35 + 0.65 * depth;
+    const sizeFactor = 0.55 + 0.85 * depth;
+    const radius = baseSize * p.size * sizeFactor * pc.p * state.zoom;
+
+    const pulse = 0.75 + 0.25 * Math.sin(now * 0.003 * p.sp + p.phase);
+    const finalRadius = radius * pulse * appearT;
+    if (finalRadius < 0.2) continue;
+
+    ctx.globalAlpha = appearT * bright * 0.55;
+    ctx.fillStyle = p.color;
+    ctx.shadowColor = p.color;
+    ctx.shadowBlur = 12 * depth + 4;
+    ctx.beginPath();
+    ctx.arc(pc.sx, pc.sy, finalRadius * 1.9, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.globalAlpha = appearT * bright;
+    ctx.shadowBlur = 7 * depth + 2;
+    ctx.fillStyle = '#ffffff';
+    ctx.beginPath();
+    ctx.arc(pc.sx, pc.sy, finalRadius * 0.7, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  /* Pase 2: destellos estelares */
+  ctx.shadowBlur = 0;
+  for (let i = 0; i < items.length; i += 5){
+    const { p, c } = items[i];
+    const appearT = clamp(
+      (state.heartFillProgress * (2.6 + p.appearDelay) - p.appearDelay) / 1.2,
+      0, 1
+    );
+    if (appearT <= 0) continue;
+
+    const twinkle = Math.sin(now * 0.004 + p.phase * 3);
+    if (twinkle < 0.88) continue;
+
+    const pc = project(c.x, c.y, c.z);
+    if (!pc) continue;
+
+    const intensity = (twinkle - 0.88) / 0.12;
+    const size = (2 + Math.random() * 3) * intensity;
+
+    ctx.globalAlpha = appearT * intensity * 0.9;
+    ctx.fillStyle = '#ffffff';
+    ctx.shadowColor = '#ffffff';
+    ctx.shadowBlur = 10;
+    ctx.beginPath();
+    ctx.arc(pc.sx, pc.sy, size, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  ctx.shadowBlur = 0;
+  ctx.globalAlpha = 1;
+  ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+}
+
+/* ============================================================
+   INTERACCIÓN CON EL CORAZÓN
+   ============================================================ */
+function attachInteraction(){
+  canvas.addEventListener('pointerdown', e => {
+    if (state.phase !== 'heart') return;
+    state.isDragging = true;
+    state.lastPX = e.clientX;
+    state.lastPY = e.clientY;
+    state.velX = 0;
+    state.velY = 0;
+    hint.classList.add('fade');
+    try { canvas.setPointerCapture(e.pointerId); } catch(err){}
+  });
+
+  canvas.addEventListener('pointermove', e => {
+    if (!state.isDragging) return;
+    const dx = e.clientX - state.lastPX;
+    const dy = e.clientY - state.lastPY;
+    state.rotY += dx * 0.007;
+    state.rotX += dy * 0.005;
+    state.rotX = clamp(state.rotX, -1.3, 1.3);
+    state.velY = dx * 0.007;
+    state.velX = dy * 0.005;
+    state.lastPX = e.clientX;
+    state.lastPY = e.clientY;
+  });
+
+  const stop = e => {
+    state.isDragging = false;
+    try { canvas.releasePointerCapture(e.pointerId); } catch(err){}
+  };
+  canvas.addEventListener('pointerup', stop);
+  canvas.addEventListener('pointercancel', stop);
+  canvas.addEventListener('pointerleave', stop);
+
+  canvas.addEventListener('wheel', e => {
+    if (state.phase !== 'heart') return;
+    e.preventDefault();
+    const f = e.deltaY > 0 ? 0.92 : 1.08;
+    state.targetZoom = clamp(state.targetZoom * f, 0.55, 2.6);
+  }, { passive: false });
+
+  let lastDist = 0;
+  canvas.addEventListener('touchstart', e => {
+    if (e.touches.length === 2){
+      lastDist = Math.hypot(
+        e.touches[0].clientX - e.touches[1].clientX,
+        e.touches[0].clientY - e.touches[1].clientY
+      );
+    }
+  }, { passive: true });
+
+  canvas.addEventListener('touchmove', e => {
+    if (e.touches.length === 2){
+      e.preventDefault();
+      const dist = Math.hypot(
+        e.touches[0].clientX - e.touches[1].clientX,
+        e.touches[0].clientY - e.touches[1].clientY
+      );
+      if (lastDist > 0){
+        const f = dist / lastDist;
+        state.targetZoom = clamp(state.targetZoom * f, 0.55, 2.6);
+      }
+      lastDist = dist;
+    }
+  }, { passive: false });
+
+  canvas.addEventListener('touchend', () => { lastDist = 0; });
+}
+
+/* ============================================================
+   SWIPE GLOBAL (navegar estrofas)
+   ============================================================ */
+function attachSwipe(){
+  let startX = 0, startY = 0, startT = 0;
+  let active = false;
+
+  document.addEventListener('pointerdown', e => {
+    if (state.phase !== 'stanzas') return;
+    if (e.target.closest('button')) return;
+    active = true;
+    startX = e.clientX;
+    startY = e.clientY;
+    startT = performance.now();
+  });
+
+  document.addEventListener('pointerup', e => {
+    if (!active) return;
+    active = false;
+    if (state.phase !== 'stanzas') return;
+    const dx = e.clientX - startX;
+    const dy = e.clientY - startY;
+    const dt = performance.now() - startT;
+    if (Math.abs(dx) < 40 || Math.abs(dy) > Math.abs(dx)) return;
+    if (dt > 1200) return;
+    if (dx < 0) nextStanza();
+    else prevStanza();
+  });
+}
+
+/* ============================================================
+   MÚSICA
+   ============================================================ */
+let musicPlaying = false;
+
+function setMusicIcon(){
+  musicBtn.textContent = musicPlaying ? '⏸' : '♪';
+  musicBtn.classList.toggle('playing', musicPlaying);
+}
+
+function tryPlayMusic(){
+  bgMusic.volume = 0.55;
+  const p = bgMusic.play();
+  if (p && p.then){
+    p.then(() => { musicPlaying = true; setMusicIcon(); })
+     .catch(() => { musicPlaying = false; setMusicIcon(); });
+  } else {
+    musicPlaying = true;
+    setMusicIcon();
+  }
+}
+
+musicBtn.addEventListener('click', () => {
+  if (musicPlaying){
+    bgMusic.pause();
+    musicPlaying = false;
+    setMusicIcon();
+  } else {
+    tryPlayMusic();
+  }
+});
+
+/* ============================================================
+   CARRITO — MONÓLOGO LENTO CON EFECTO MÁQUINA DE ESCRIBIR
+   ============================================================ */
+let carDialogStep = 0;
+let bubbleTimer = null;
+
+/* Muestra el bocadillo con efecto máquina de escribir */
+function showBubble(text, duration){
+  clearTimeout(bubbleTimer);
+  carBubble.textContent = '';
+  carBubble.classList.add('show');
+
+  let i = 0;
+  const speed = 55; /* ms por letra del bocadillo */
+
+  function type(){
+    if (i < text.length){
+      carBubble.textContent += text[i];
+      i++;
+      bubbleTimer = setTimeout(type, speed);
+    } else if (duration){
+      const restante = Math.max(0, duration - text.length * speed);
+      bubbleTimer = setTimeout(() => {
+        carBubble.classList.remove('show');
+      }, restante);
+    }
+  }
+  type();
+}
+
+function hideBubble(){
+  clearTimeout(bubbleTimer);
+  carBubble.classList.remove('show');
+}
+
+/* Frases del monólogo del carrito (lento y tierno) */
+const CAR_MONOLOGUE = [
+  'Oye, Cami... ¿puedo contarte algo? 👀',
+  'Manuel pasó días enteros pensando en esto…',
+  'Cada palabra, cada color, cada detalle…',
+  'Todo lo hizo pensando en ti, de verdad. 💫',
+  'Quería regalarte algo que no se pudiera borrar…',
+  'Algo que sintieras cada vez que lo leyeras.',
+  'Así que preparó este poema, solo para ti. 📖',
+  '¿Te animas a leerlo? 💌'
+];
+
+function setupCarDialog(){
+  setTimeout(() => {
+    showBubble('¡Hola, Cami! 👋', 4500);
+  }, 600);
+
+  car.addEventListener('click', async function onCarClick(e){
+    e.stopPropagation();
+    if (carDialogStep !== 0) return;
+    carDialogStep = 1;
+
+    hideBubble();
+    await sleep(400);
+
+    for (let i = 0; i < CAR_MONOLOGUE.length; i++){
+      const frase = CAR_MONOLOGUE[i];
+      /* Más lento: mínimo 3.5s por frase + 95ms por letra */
+      const duracion = Math.max(3500, frase.length * 95);
+      showBubble(frase, duracion);
+      /* Pausa amplia entre frases */
+      await sleep(duracion + 600);
+    }
+
+    carChoices.classList.add('show');
+  });
+}
+
+/* ====== BOTÓN SÍ ====== */
+btnYes.addEventListener('click', async (e) => {
+  e.stopPropagation();
+  carChoices.classList.remove('show');
+  hideBubble();
+  await sleep(300);
+
+  carRace.classList.add('show');
+
+  /* El mensaje racing dura 6 segundos completos para leerlo bien */
+  await sleep(6000);
+
+  carRace.classList.remove('show');
+  await sleep(400);
+
+  car.classList.add('runaway');
+
+  await sleep(1200);
+  startBtn.classList.add('show');
+});
+
+/* ====== BOTÓN NO ====== */
+btnNo.addEventListener('click', async (e) => {
+  e.stopPropagation();
+  carChoices.classList.remove('show');
+  hideBubble();
+  await sleep(200);
+
+  const INSIST = [
+    '¿Segura, Cami? 🥺',
+    'Te prometo que vale la pena…',
+    'Manuel se esforzó muchísimo, en serio…',
+    'Solo un poquito, ¿sí? 💕'
+  ];
+  for (let i = 0; i < INSIST.length; i++){
+    const duracion = Math.max(3200, INSIST[i].length * 90);
+    showBubble(INSIST[i], duracion);
+    await sleep(duracion + 500);
+  }
+
+  carChoices.classList.add('show');
+});
+
+/* ============================================================
+   REINICIO
+   ============================================================ */
+async function restart(){
+  bgMusic.pause();
+  bgMusic.currentTime = 0;
+  musicPlaying = false;
+  setMusicIcon();
+
+  clearStanza();
+
+  state.phase = 'welcome';
+  state.rotX = 0.08;
+  state.rotY = 0;
+  state.velX = 0; state.velY = 0;
+  state.zoom = 1;
+  state.targetZoom = 1;
+  state.isDragging = false;
+  state.heartFillProgress = 0;
+  state.heartbeat = 0;
+
+  stanzaState.current = 0;
+  stanzaState.transitioning = false;
+
+  car.classList.remove('runaway');
+  carChoices.classList.remove('show');
+  carRace.classList.remove('show');
+  hideBubble();
+  startBtn.classList.remove('show');
+  carDialogStep = 0;
+
+  hint.classList.remove('on', 'fade');
+  progress.classList.remove('on');
+  arrowL.classList.remove('visible');
+  arrowR.classList.remove('visible');
+  canvas.classList.remove('grab', 'on');
+
+  ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+  ctx.clearRect(0, 0, W, H);
+
+  welcome.classList.remove('hidden');
+  controls.classList.remove('visible');
+  await sleep(400);
+
+  setTimeout(() => {
+    if (state.phase === 'welcome') showBubble('¡Hola, Cami! 👋', 4500);
+  }, 700);
+}
+
+restartBtn.addEventListener('click', restart);
+
+/* ============================================================
+   INICIO DE LA EXPERIENCIA
+   ============================================================ */
+async function startExperience(){
+  welcome.classList.add('hidden');
+  controls.classList.add('visible');
+  await sleep(700);
+
+  state.phase = 'stanzas';
+  stanzaState.current = 0;
+  stanzaState.transitioning = false;
+
+  buildProgress();
+  updateProgress();
+  updateArrows();
+
+  progress.classList.add('on');
+  hint.textContent = 'desliza ← → o usa las flechas para navegar';
+  hint.classList.remove('fade');
+  hint.classList.add('on');
+
+  showStanza(0);
+}
+
+/* ============================================================
+   FLECHAS + TECLADO
+   ============================================================ */
+arrowL.addEventListener('click', prevStanza);
+arrowR.addEventListener('click', nextStanza);
+
+document.addEventListener('keydown', e => {
+  if (state.phase !== 'stanzas') return;
+  if (e.key === 'ArrowRight') nextStanza();
+  if (e.key === 'ArrowLeft') prevStanza();
+});
+
+/* ============================================================
+   HELPERS
+   ============================================================ */
+function clamp(v, a, b){ return v < a ? a : (v > b ? b : v); }
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+
+/* ============================================================
+   ARRANQUE
+   ============================================================ */
+function start(){
+  resize();
+  buildStars();
+  buildParticles();
+  attachInteraction();
+  attachSwipe();
+  setupCarDialog();
+  requestAnimationFrame(loop);
+}
+
+if (document.fonts && document.fonts.ready){
+  document.fonts.ready.then(start).catch(start);
+} else {
+  window.addEventListener('load', start);
+}
+
+let resizeTimer = null;
+window.addEventListener('resize', () => {
+  clearTimeout(resizeTimer);
+  resizeTimer = setTimeout(resize, 200);
+});
+
+startBtn.addEventListener('click', () => {
+  tryPlayMusic();
+  startExperience();
+});
+
+})();
+</script>
+</body>
+</html>
